@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<button id="btn_load_id" type="button" class="btn btn-success">Upload Data</button>
+<br />
+<input id="txt_data" type="text" class="form-control" placeholder="Enter a data" style="width:200px;" />
+<button id="btn_load_id_2" type="button" class="btn btn-success">Data Send &amp; Upload</button>
+<hr />
+
+<div id="loading_id" class="alert alert-warning" style="display:none;">Loading...</div>
+<ul id="list_id" class="list-group"></ul>
+
+<script>
+
+    $(function () {
+
+        $("#btn_load_id").click(function () {
+
+            $("#list_id").empty();
+
+            $("#loading_id").show(300, function () {
+
+                $.get("/Home/Data_Getter", function (d) {
+
+                    $("#list_id").html(d);
+
+                }).fail(function () {
+                    alert("Hopps!There is an error.");
+                }).always(function myfunction() {
+                    $("#loading_id").hide(300);  //hata alınsa bile Loading... in kaybolması gerekmekte.
+                });
+
+            });
+
+        });
+
+
+        $("#btn_load_id_2").click(function () {
+
+            $("#list_id").empty();
+
+            $("#loading_id").show(300, function () {
+
+
+                var data = $("#txt_data").val();
+                $.get("/Home/Data_Getter", { sending_data: data }, function (d) { //birinci parametrede belirtilen adresteki datayı d isimli değişkenimize kendisi otomatik aktarır. (burdaki "sending_data" ile Controller tarafındaki parametre adi ayni olmalı!!!)
+
+                    $("#list_id").html(d);
+
+                    // $("#loading_id").hide(300);
+                }).fail(function () {
+                    alert("Hopps!There is an error.");
+                }).always(function myfunction() {
+                    $("#loading_id").hide(300);  //hata alınsa bile Loading... in kaybolması gerekmekte.
+                });
+
+            });
+
+        });
+
+
+    });
+
+</script>
+
+
+@*Home/Data_Getter da son harfi sil Action ı bulamasın ve hata olussun hata kontrolunu denemek icin!*@
